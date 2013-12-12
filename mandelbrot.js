@@ -128,7 +128,9 @@ $(document).on('ready', function() {
   });
 
   $(document).on('click', '.zoomout', function(e) {
+    $('zoomout').hide();
     zoomOut();
+    setTimeout(function() {$('.zoomout').show();}, 200);
   });
 
   $(document).on('click', '.nav', function(e) {
