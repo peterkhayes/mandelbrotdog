@@ -15,7 +15,7 @@ var mandelbrot = function(a, b) {
   var zB2 = 0;
   for (var i = 0; i < ZOOM_FACTOR*ITERATION_LIMIT; i++) {
     if (zA2 + zB2 > DIVERGE_LIMIT*ZOOM_FACTOR*ZOOM_FACTOR) {
-      return Math.floor(i/ZOOM_FACTOR) || ITERATION_LIMIT;
+      return ~~(i/ZOOM_FACTOR) || ITERATION_LIMIT;
     } else {
       var tempZA = zA2 - zB2 + a;
       zA += zA;
@@ -77,6 +77,7 @@ var zoomIn = function(click_x, click_y) {
 var zoomOut = function() {
   STEP *= 2;
   ZOOM_FACTOR--;
+  console.log(ZOOM_FACTOR);
   if (ZOOM_FACTOR > 1) {
     $('.zoomout').show();
   } else {
@@ -105,16 +106,16 @@ var wow = function() {
   $('.visualizer').append(eyes);
   var randomX = $(window).width()*(Math.random()*0.4 + 0.2);
   var randomY = $(window).height()*(Math.random()*0.4 + 0.2);
-
+  var randomLetter = function() {return ['8','9','A', 'B', 'C', 'D', 'E', 'F'][~~(Math.random()*8)];};
   $(eyes).css({
+    color: "#" + randomLetter() + randomLetter() + randomLetter(),
     top: randomY,
     left: randomX
   }).animate({
-    'font-size': '40px',
     opacity: 0
-  }, 500, 'linear', function() {
+  }, 1000, 'linear', function() {
     eyes.remove();
-    setTimeout(wow, 1000);
+    setTimeout(wow, 8000);
   });
 };
 
@@ -128,18 +129,22 @@ $(document).on('ready', function() {
   });
 
   $(document).on('click', '.zoomout', function(e) {
-    $('zoomout').hide();
     zoomOut();
-    setTimeout(function() {$('.zoomout').show();}, 200);
   });
 
   $(document).on('click', '.nav', function(e) {
     move($(e.target).attr('direction'));
   });
 
+  $(document).on('click', '.explanation', function() {
+    $('.explanation').hide();
+    $('.nav').show();
+    $('.zoomout').hide();
+  });
+
   $(window).resize(function() {
     render();
   });
 
-  setTimeout(wow, Math.random()*1000);
+  setTimeout(wow, Math.random()*5000);
 });
